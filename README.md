@@ -1,31 +1,126 @@
-# Laravel + Livewire Starter Kit
+# 🚀 Projeto Laravel com Livewire, Breeze, Pest e Redis
 
-## Introduction
+Este repositório contém uma base sólida para iniciar um projeto Laravel com autenticação integrada, Livewire para componentes reativos, Pest para testes e Redis para cache (especialmente de permissões).
 
-Our Laravel + [Livewire](https://livewire.laravel.com) starter kit provides a robust, modern starting point for building Laravel applications with a Livewire frontend.
+---
 
-Livewire is a powerful way of building dynamic, reactive, frontend UIs using just PHP. It's a great fit for teams that primarily use Blade templates and are looking for a simpler alternative to JavaScript-driven SPA frameworks like React and Vue.
+## 📦 Criando o Projeto Laravel com Livewire e Pest
 
-This Livewire starter kit utilizes Livewire 3, Laravel Volt (optionally), TypeScript, Tailwind, and the [Flux UI](https://fluxui.dev) component library.
+### 1. Criar o projeto Laravel
+```bash
+composer create-project laravel/laravel nome-do-projeto
+cd nome-do-projeto
+```
 
-If you are looking for the alternate configurations of this starter kit, they can be found in the following branches:
+### 2. Instalar o Laravel Breeze com suporte ao Livewire
+```bash
+composer require laravel/breeze --dev
+php artisan breeze:install livewire
+```
 
-- [components](https://github.com/laravel/livewire-starter-kit/tree/components) - if Volt is not selected
-- [workos](https://github.com/laravel/livewire-starter-kit/tree/workos) - if WorkOS is selected for authentication
+### 3. Instalar as dependências do frontend e compilar os assets
+```bash
+npm install && npm run dev
+```
 
-## Official Documentation
+### 4. Rodar as migrations
+```bash
+php artisan migrate
+```
 
-Documentation for all Laravel starter kits can be found on the [Laravel website](https://laravel.com/docs/starter-kits).
+### 5. Instalar o Pest como framework de testes
+```bash
+composer require pestphp/pest --dev
+php artisan pest:install
+```
 
-## Contributing
+---
 
-Thank you for considering contributing to our starter kit! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🛠️ Configurando o Redis no Projeto
 
-## Code of Conduct
+### 1. Atualizar o arquivo `.env` para usar Redis como driver de cache
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```env
+CACHE_DRIVER=redis
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+```
 
-## License
+> ⚠️ O Redis precisa estar instalado e rodando na sua máquina.
+> Você pode instalar via Docker ou manualmente.
+> Saiba mais: https://redis.io/docs/getting-started/
 
-The Laravel + Livewire starter kit is open-sourced software licensed under the MIT license.
-# Laravel12Livewire
+---
+
+## 🧠 Estrutura de Pastas para Cache de Permissões com Redis
+
+Este projeto utiliza uma estrutura clara, orientada a ações e responsabilidades separadas, para armazenar e recuperar permissões de usuários no Redis:
+
+```
+app/
+├── Actions/
+│   └── Permissions/
+│       ├── CacheUserPermissions.php         # Armazena permissões do usuário no Redis
+│       └── GetCachedUserPermissions.php     # Recupera permissões do usuário a partir do Redis
+│
+├── Listeners/
+│   └── CacheUserPermissionsOnLogin.php      # Escuta evento de login e executa cache das permissões
+│
+├── Models/
+│   └── Permission.php                       # Modelo da tabela permissions (N:N com usuários)
+│
+├── Services/
+│   └── PermissionService.php                # Serviço opcional para abstrair acesso a permissões
+```
+
+> 🎯 Essa arquitetura facilita a manutenção, reutilização e testabilidade da lógica de permissões.
+
+---
+
+## ✅ Próximos Passos Recomendados
+
+- Criar as migrations para `permissions` e `permission_user` (relacionamento N:N).
+- Associar permissões aos usuários.
+- Utilizar policies e middlewares com base nas permissões cacheadas.
+- Adicionar testes com Pest para validar cenários de acesso e autorização.
+
+---
+
+## 🧪 Exemplo de Teste com Pest
+
+```php
+test('usuário com permissão "admin" pode acessar dashboard', function () {
+    $user = User::factory()->create();
+    $permission = Permission::factory()->create(['name' => 'admin']);
+    $user->permissions()->attach($permission);
+
+    (new \App\Actions\Permissions\CacheUserPermissions())->execute($user);
+
+    $this->actingAs($user)
+         ->get('/dashboard')
+         ->assertOk();
+});
+```
+
+---
+
+## 📌 Requisitos
+
+- PHP >= 8.1
+- Composer
+- Node.js + NPM
+- MySQL ou PostgreSQL
+- Redis
+
+---
+
+## 📚 Referências
+
+- [Laravel Documentation](https://laravel.com/docs)
+- [Livewire Docs](https://livewire.laravel.com/)
+- [Laravel Breeze](https://laravel.com/docs/starter-kits#laravel-breeze)
+- [Pest PHP](https://pestphp.com/)
+- [Redis](https://redis.io/)
+
+---
