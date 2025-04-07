@@ -34,7 +34,11 @@ Substitua SEU_USUARIO pelo nome do seu usuário do Windows.
 Clique em OK e reinicie o terminal.
 
 ### 2. Instalar o Laravel Breeze com suporte ao Livewire
+
 ```bash
+composer require laravel/breeze --dev
+php artisan breeze:install livewire
+
 laravel new
 ```
 
