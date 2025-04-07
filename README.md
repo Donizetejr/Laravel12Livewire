@@ -7,15 +7,35 @@ Este repositório contém uma base sólida para iniciar um projeto Laravel com a
 ## 📦 Criando o Projeto Laravel com Livewire e Pest
 
 ### 1. Criar o projeto Laravel
+
+ 1.1 Instalar o Laravel Installer (caso ainda não tenha)
+Abra o terminal (CMD, PowerShell ou Git Bash) e rode:
+
 ```bash
-composer create-project laravel/laravel nome-do-projeto
-cd nome-do-projeto
+
+composer global require laravel/installer
 ```
+
+Depois disso, adicione o diretório global do Composer no seu PATH:
+
+Como fazer isso:
+Abra o menu iniciar e pesquise "Variáveis de Ambiente".
+
+Clique em "Variáveis de Ambiente".
+
+Em "Variáveis do Sistema", selecione Path e clique em Editar.
+
+Clique em Novo e adicione este caminho:
+
+```bash
+C:\Users\SEU_USUARIO\AppData\Roaming\Composer\vendor\bin
+Substitua SEU_USUARIO pelo nome do seu usuário do Windows.
+```
+Clique em OK e reinicie o terminal.
 
 ### 2. Instalar o Laravel Breeze com suporte ao Livewire
 ```bash
-composer require laravel/breeze --dev
-php artisan breeze:install livewire
+laravel new
 ```
 
 ### 3. Instalar as dependências do frontend e compilar os assets
@@ -26,12 +46,6 @@ npm install && npm run dev
 ### 4. Rodar as migrations
 ```bash
 php artisan migrate
-```
-
-### 5. Instalar o Pest como framework de testes
-```bash
-composer require pestphp/pest --dev
-php artisan pest:install
 ```
 
 ---
