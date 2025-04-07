@@ -36,6 +36,8 @@ Clique em OK e reinicie o terminal.
 ### 2. Instalar o Laravel Breeze com suporte ao Livewire
 
 ```bash
+composer require livewire/livewire
+
 composer require laravel/breeze --dev
 php artisan breeze:install livewire
 
